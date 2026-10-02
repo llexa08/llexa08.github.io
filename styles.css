@@ -1,0 +1,980 @@
+/* ============================================================================
+   PROYECTO FINAL: INICIO - SISTEMA DE GESTIÓN CIUDADANA (VERSIÓN 2.0 MEJORADA)
+   COPACI Granjas Guadalupe, Nicolás Romero, Estado de México
+   Materia: Programación Construye Apps Web | Tema: Maquetación HTML5 y CSS3
+   Archivo: styles.css (HOJA DE ESTILOS EXTERNA - única fuente de presentación)
+   ----------------------------------------------------------------------------
+   ORDEN DE MÓDULOS:
+     1.  Variables CSS (paleta institucional MANTENIDA y tipografías)
+     2.  Estilos globales / reinicio (Mobile First)
+     3.  Utilidades compartidas (títulos, botones, folios)
+     4.  Accesibilidad (salto al contenido, barra A+/A-/contraste, alto contraste)
+     5.  Encabezado y navegación (incluye menú móvil hamburguesa)
+     6.  Sección Hero (bienvenida + guía de 3 pasos)
+     7.  Directorio de emergencias (botones tel:)
+     8.  Trámites y servicios (CSS Grid)
+     9.  Formularios (reporte, estatus, propuestas)
+    10.  Comités vecinales (CSS Grid)
+    11.  Avisos oficiales (etiquetas de estado)
+    12.  Transparencia
+    13.  Barra lateral / eventos (aside)
+    14.  Preguntas frecuentes (FAQ)
+    15.  Pie de página (CSS Grid)
+    16.  Media queries (Mobile First: celular -> tablet -> escritorio)
+============================================================================ */
+
+
+/* ==================== 1. VARIABLES CSS (PALETA INSTITUCIONAL MANTENIDA) ====================
+   Se conservan EXACTAMENTE los colores institucionales solicitados.
+   Cambiar un valor aquí actualiza TODO el sitio (mantenimiento sencillo). */
+:root {
+    /* ---- Paleta institucional (REQUISITO OBLIGATORIO - NO MODIFICAR VALORES) ---- */
+    --color-primario:    #1B5E20;  /* Verde primario: encabezado, pie, títulos */
+    --color-secundario:  #2E7D32;  /* Verde secundario: acentos, botones, hover */
+    --color-acento:      #F9A825;  /* Ámbar acento: botones principales, detalles */
+    --color-fondo:       #F4F7F4;  /* Fondo claro general de la página */
+    --color-tarjeta:     #FFFFFF;  /* Fondo de tarjetas, avisos y formularios */
+    --color-texto:       #212121;  /* Texto principal */
+
+    /* Colores auxiliares derivados (estados y énfasis) */
+    --color-texto-suave: #555555;  /* Texto secundario / ayudas */
+    --color-borde:       #DDE5DD;  /* Bordes suaves */
+    --color-exito:       #2E7D32;  /* Confirmaciones (verde) */
+    --color-peligro:     #B71C1C;  /* Urgencias / errores (rojo) */
+    --color-info:        #1565C0;  /* Etiquetas informativas (azul) */
+
+    /* Tipografías legibles (sans-serif = fácil lectura para adultos mayores) */
+    --fuente-principal: "Segoe UI", Arial, Helvetica, sans-serif;
+    --fuente-titulos:   "Georgia", "Times New Roman", serif;
+
+    /* Medidas reutilizables */
+    --ancho-maximo: 1200px;
+    --radio-borde:  12px;
+    --sombra-suave: 0 4px 14px rgba(27, 94, 32, 0.12);
+    --transicion:   all 0.25s ease-in-out;
+}
+
+
+/* ==================== 2. ESTILOS GLOBALES / REINICIO (MOBILE FIRST) ====================
+   Se escribe primero la versión de CELULAR; las media queries del módulo 16
+   amplían el diseño hacia tablet y escritorio (estrategia Mobile First). */
+*,
+*::before,
+*::after {
+    /* box-sizing: border-box => padding y borde NO aumentan el ancho declarado.
+       Evita desbordamientos y cálculos complicados. */
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    /* Base de tamaño de letra: la barra de accesibilidad (A+/A-) cambia este
+       valor con JavaScript y TODAS las medidas rem del sitio escalan. */
+    font-size: 100%;
+    /* Desplazamiento suave al navegar por anclas internas (#tramites, etc.) */
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--fuente-principal);
+    color: var(--color-texto);
+    background-color: var(--color-fondo);
+    line-height: 1.6;               /* Interlineado cómodo para lectura */
+    font-size: 1.05rem;             /* Ligeramente mayor al estándar por accesibilidad */
+}
+
+/* Imágenes responsivas por defecto: nunca exceden su contenedor */
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Texto sólo para lectores de pantalla: visible para asistencia, invisible a la vista */
+.sr-only {
+    position: absolute;
+    width: 1px; height: 1px;
+    padding: 0; margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+
+/* ==================== 3. UTILIDADES COMPARTIDAS ==================== */
+
+/* Títulos de cada sección (<h2>): versión base centrada sobre fondo claro */
+.seccion-titulo {
+    font-family: var(--fuente-titulos);
+    font-size: 1.9rem;
+    color: var(--color-primario);
+    text-align: center;
+    margin-bottom: 0.4rem;
+}
+
+/* Variantes del título según el contexto visual */
+.seccion-titulo--blanco   { color: #FFFFFF; }                 /* sobre fondo verde (emergencias) */
+.seccion-titulo--izquierda{ text-align: left; }               /* alineado a la izquierda (avisos) */
+
+/* Descripción breve que acompaña al título de cada sección */
+.seccion-descripcion {
+    text-align: center;
+    color: var(--color-texto-suave);
+    max-width: 640px;
+    margin: 0 auto 2.2rem auto;
+}
+
+/* Variantes de la descripción */
+.seccion-descripcion--blanca    { color: rgba(255, 255, 255, 0.92); }
+.seccion-descripcion--izquierda { text-align: left; margin-left: 0; }
+
+/* -------- Botones de acción (componente reutilizable) --------
+   Áreas de toque amplias (mínimo 44px de alto) para personas mayores. */
+.boton {
+    display: inline-block;
+    font-family: var(--fuente-principal);
+    font-size: 1.05rem;
+    font-weight: 600;
+    padding: 0.85rem 1.8rem;         /* botón grande y cómodo */
+    min-height: 44px;                /* área de toque accesible */
+    border: none;
+    border-radius: var(--radio-borde);
+    cursor: pointer;
+    text-decoration: none;
+    transition: var(--transicion);
+}
+
+/* Efecto hover/focus: elevación + sombra (interacción visual requerida) */
+.boton:hover,
+.boton:focus-visible {
+    transform: translateY(-3px);
+    box-shadow: var(--sombra-suave);
+}
+
+/* Botón principal: fondo ámbar, texto oscuro */
+.boton--primario {
+    background-color: var(--color-acento);
+    color: #3E2723;
+}
+.boton--primario:hover { background-color: #FFB300; }
+
+/* Botón secundario: contorno blanco (sobre fondos verdes/oscuros) */
+.boton--secundario {
+    background-color: transparent;
+    color: #FFFFFF;
+    border: 2px solid #FFFFFF;
+}
+.boton--secundario:hover { background-color: #FFFFFF; color: var(--color-primario); }
+
+/* Botón secundario oscuro: contorno verde (sobre fondos claros) */
+.boton--secundario-oscuro {
+    background-color: transparent;
+    color: var(--color-primario);
+    border: 2px solid var(--color-primario);
+}
+.boton--secundario-oscuro:hover { background-color: var(--color-primario); color: #FFFFFF; }
+
+/* Botón dentro de tarjetas de trámites */
+.boton--tarjeta {
+    background-color: var(--color-secundario);
+    color: #FFFFFF;
+    font-size: 0.95rem;
+    padding: 0.65rem 1.2rem;
+}
+.boton--tarjeta:hover { background-color: var(--color-primario); }
+
+/* Variante de botón que ocupa todo el ancho de su contenedor */
+.boton--ancho { width: 100%; margin-top: 0.8rem; }
+
+/* -------- Folio de seguimiento (destacado en pantalla) -------- */
+.folio {
+    display: inline-block;
+    background-color: var(--color-primario);
+    color: #FFFFFF;
+    font-weight: 700;
+    font-size: 1.15rem;
+    letter-spacing: 1px;
+    padding: 0.35rem 0.9rem;
+    border-radius: 8px;
+    margin: 0.3rem 0;
+}
+
+
+/* ==================== 4. ACCESIBILIDAD ==================== */
+
+/* -------- Enlace de salto al contenido (solo visible al recibir foco) --------
+   Primera parada de la tecla TAB: permite a usuarios de lector de pantalla
+   saltar directamente al <main> sin recorrer todo el encabezado. */
+.salto-enlace {
+    position: absolute;
+    top: -60px;                       /* fuera de la pantalla por defecto */
+    left: 1rem;
+    background: var(--color-acento);
+    color: #212121;
+    font-weight: 700;
+    padding: 0.8rem 1.2rem;
+    border-radius: 0 0 8px 8px;
+    z-index: 999;
+    transition: top 0.2s ease;
+}
+.salto-enlace:focus { top: 0; }      /* aparece al navegar con teclado */
+
+/* -------- Barra superior de accesibilidad -------- */
+.barra-accesibilidad {
+    background-color: #123D16;        /* verde muy oscuro para distinguirla del header */
+    display: flex;
+    justify-content: flex-end;        /* botones a la derecha */
+    gap: 0.4rem;
+    padding: 0.35rem 1rem;
+    flex-wrap: wrap;
+}
+
+/* Botones A-, A+ y Alto Contraste */
+.accesibilidad__boton {
+    background-color: rgba(255, 255, 255, 0.12);
+    color: #FFFFFF;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    font-family: var(--fuente-principal);
+    font-size: 1rem;
+    font-weight: 700;
+    min-height: 40px;
+    padding: 0.35rem 0.9rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: var(--transicion);
+}
+.accesibilidad__boton:hover,
+.accesibilidad__boton:focus-visible {
+    background-color: var(--color-acento);
+    color: #212121;
+}
+
+/* -------- MODO DE ALTO CONTRASTE --------
+   Cuando JavaScript agrega la clase .alto-contraste a <body>, se redefinen
+   las variables de color para máxima legibilidad. */
+body.alto-contraste {
+    --color-primario:   #000000;   /* encabezado y pie: negro puro */
+    --color-secundario: #1B5E20;
+    --color-fondo:      #FFFFFF;   /* fondo blanco puro */
+    --color-tarjeta:    #FFFFFF;
+    --color-texto:      #000000;   /* texto negro puro */
+    --color-texto-suave:#111111;
+    --color-borde:      #000000;   /* bordes visibles */
+    --sombra-suave:     none;      /* sin sombras: diseño plano de alto contraste */
+}
+body.alto-contraste .hero,
+body.alto-contraste .emergencias,
+body.alto-contraste .lateral__widget {
+    background: #000000;            /* bandas oscuras sólidas */
+    border: 2px solid #F9A825;      /* separación clara con el ámbar */
+}
+body.alto-contraste .barra-accesibilidad { background: #000000; }
+body.alto-contraste .encabezado { border-bottom: 3px solid #F9A825; }
+/* Subrayado permanente de enlaces en alto contraste */
+body.alto-contraste a { text-decoration: underline; }
+body.alto-contraste .tarjeta,
+body.alto-contraste .aviso,
+body.alto-contraste .formulario,
+body.alto-contraste .comite { border: 2px solid #000000; }
+/* Indicador de foco muy visible para navegación con teclado */
+body.alto-contraste :focus-visible {
+    outline: 4px solid #F9A825;
+    outline-offset: 3px;
+}
+
+
+/* ==================== 5. ENCABEZADO Y NAVEGACIÓN ==================== */
+.encabezado {
+    background-color: var(--color-primario);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    position: sticky;
+    top: 0;                           /* el encabezado permanece visible al hacer scroll */
+    z-index: 100;
+}
+
+/* Contenedor FLEX: marca a la izquierda y menú a la derecha (en escritorio) */
+.encabezado__contenedor {
+    max-width: var(--ancho-maximo);
+    margin: 0 auto;
+    padding: 0.7rem 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+/* -------- Marca institucional (logo + nombre) -------- */
+.marca {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    text-decoration: none;
+}
+.marca__logo { width: 54px; height: 54px; }
+.marca__texto {
+    display: flex;
+    flex-direction: column;
+    color: #FFFFFF;
+    line-height: 1.15;
+}
+.marca__texto strong { font-size: 1.25rem; letter-spacing: 1px; }
+.marca__texto small  { font-size: 0.75rem; opacity: 0.85; }
+
+/* -------- Botón hamburguesa (solo visible en celular, controlado por media queries) -------- */
+.menu-toggle {
+    display: none;                    /* oculto en escritorio; se muestra en móvil (módulo 16) */
+    background-color: rgba(255, 255, 255, 0.12);
+    color: #FFFFFF;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    font-size: 1rem;
+    font-weight: 600;
+    min-height: 44px;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radio-borde);
+    cursor: pointer;
+}
+.menu-toggle:hover { background-color: var(--color-acento); color: #212121; }
+
+/* -------- Menú de navegación -------- */
+.navegacion__lista {
+    list-style: none;                 /* se quitan las viñetas... */
+    display: flex;                    /* ...y la lista se vuelve fila flexible */
+    gap: 0.4rem;
+    flex-wrap: wrap;
+}
+.navegacion__enlace {
+    color: #FFFFFF;
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    padding: 0.5rem 0.85rem;
+    border-radius: var(--radio-borde);
+    transition: var(--transicion);
+    display: inline-block;
+}
+.navegacion__enlace:hover,
+.navegacion__enlace:focus-visible {
+    background-color: rgba(255, 255, 255, 0.18);
+    transform: translateY(-2px);
+}
+
+
+/* ==================== 6. SECCIÓN HERO (BIENVENIDA + GUÍA DE 3 PASOS) ==================== */
+.hero {
+    background: linear-gradient(135deg, var(--color-primario) 0%, var(--color-secundario) 100%);
+    color: #FFFFFF;
+    padding: 3rem 1.2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2.5rem;
+    flex-wrap: wrap;                  /* texto e ilustración se apilan en pantallas estrechas */
+}
+.hero__contenido { max-width: 620px; }
+
+.hero h1 {
+    font-family: var(--fuente-titulos);
+    font-size: 2.4rem;
+    line-height: 1.2;
+    margin-bottom: 0.3rem;
+}
+.hero__subtitulo {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--color-acento);
+    margin-bottom: 1rem;
+}
+.hero__descripcion { font-size: 1.05rem; opacity: 0.95; margin-bottom: 1.6rem; }
+
+/* -------- Guía rápida en 3 pasos (para adultos mayores) --------
+   Lista ordenada con números grandes dentro de círculos ámbar. */
+.pasos {
+    list-style: none;                 /* se ocultan los números nativos de <ol>... */
+    counter-reset: paso;              /* ...y se usan círculos personalizados */
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    margin-bottom: 1.8rem;
+}
+.pasos__item {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    background-color: rgba(255, 255, 255, 0.12);
+    border-radius: var(--radio-borde);
+    padding: 0.7rem 1rem;
+}
+.pasos__numero {
+    /* Círculo ámbar con el número del paso: referencia visual clara */
+    background-color: var(--color-acento);
+    color: #3E2723;
+    font-weight: 800;
+    font-size: 1.3rem;
+    width: 44px; height: 44px;
+    min-width: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.pasos__texto { font-size: 1rem; }
+
+.hero__acciones { display: flex; gap: 1rem; flex-wrap: wrap; }
+.hero__figura img {
+    border-radius: var(--radio-borde);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    max-width: 420px;
+}
+
+
+/* ==================== 7. DIRECTORIO DE EMERGENCIAS (BOTONES tel:) ==================== */
+.emergencias {
+    background-color: var(--color-primario);
+    padding: 3rem 1.2rem;
+}
+
+/* GRID: 1 columna en celular; 2 en tablet; 4 en escritorio (ver módulo 16) */
+.emergencias__rejilla {
+    max-width: var(--ancho-maximo);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
+}
+
+/* Tarjeta-boton de emergencia: es un <a href="tel:..."> con área de toque grande */
+.emergencia {
+    background-color: var(--color-tarjeta);
+    border-radius: var(--radio-borde);
+    padding: 1.3rem 1.2rem;
+    text-decoration: none;
+    color: var(--color-texto);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+    border: 3px solid transparent;      /* borde preparado para el estado hover */
+    transition: var(--transicion);
+}
+.emergencia:hover,
+.emergencia:focus-visible {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.35);
+    border-color: var(--color-acento);  /* resalta al pasar el dedo/mouse */
+}
+/* Variante para servicios críticos: borde rojo permanente (llama la atención) */
+.emergencia--critica { border-color: var(--color-peligro); }
+
+.emergencia__icono  { font-size: 2.2rem; }
+.emergencia__nombre { font-weight: 700; font-size: 1.05rem; color: var(--color-primario); }
+.emergencia__numero { font-size: 1.35rem; font-weight: 800; letter-spacing: 1px; }
+.emergencia__hint   { font-size: 0.8rem; color: var(--color-texto-suave); }
+
+
+/* ==================== 8. TRÁMITES Y SERVICIOS (CSS GRID) ==================== */
+.tramites {
+    max-width: var(--ancho-maximo);
+    margin: 0 auto;
+    padding: 3.5rem 1.2rem;
+}
+
+/* GRID de tarjetas: 1 columna en celular -> 2 tablet -> 4 escritorio */
+.tramites__rejilla {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.6rem;
+}
+
+/* -------- Tarjeta de servicio (<article>) -------- */
+.tarjeta {
+    background-color: var(--color-tarjeta);
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radio-borde);
+    padding: 1.6rem 1.4rem;
+    box-shadow: var(--sombra-suave);
+    text-align: center;
+    transition: var(--transicion);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.tarjeta:hover {
+    transform: translateY(-8px);
+    border-color: var(--color-secundario);
+    box-shadow: 0 12px 28px rgba(27, 94, 32, 0.22);
+}
+.tarjeta__icono  { font-size: 2.4rem; margin-bottom: 0.7rem; }
+.tarjeta__titulo {
+    font-family: var(--fuente-titulos);
+    font-size: 1.2rem;
+    color: var(--color-primario);
+    margin-bottom: 0.6rem;
+}
+.tarjeta__texto {
+    font-size: 0.95rem;
+    color: var(--color-texto-suave);
+    margin-bottom: 1.2rem;
+    flex-grow: 1;                     /* empuja el botón abajo, alineando botones */
+}
+
+
+/* ==================== 9. FORMULARIOS (REPORTE, ESTATUS, PROPUESTAS) ====================
+   Estilos comunes de todos los formularios del portal. */
+.reporte,
+.estatus,
+.propuestas {
+    max-width: var(--ancho-maximo);
+    margin: 0 auto;
+    padding: 2.5rem 1.2rem;
+}
+
+/* Caja blanca que envuelve cada formulario */
+.formulario {
+    background-color: var(--color-tarjeta);
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radio-borde);
+    box-shadow: var(--sombra-suave);
+    padding: 1.8rem 1.6rem;
+    max-width: 640px;
+    margin: 0 auto;
+}
+
+/* Cada campo va en su propio grupo (etiqueta + control + ayuda) */
+.formulario__grupo { margin-bottom: 1.2rem; }
+
+/* Etiqueta visible y grande encima de cada campo */
+.formulario__etiqueta {
+    display: block;
+    font-weight: 700;
+    font-size: 1.02rem;
+    margin-bottom: 0.4rem;
+    color: var(--color-primario);
+}
+
+/* Campos de entrada: alto mínimo de 48px para área de toque cómoda */
+.formulario__campo {
+    width: 100%;
+    min-height: 48px;
+    font-family: var(--fuente-principal);
+    font-size: 1.05rem;
+    color: var(--color-texto);
+    background-color: #FBFDFB;
+    border: 2px solid var(--color-borde);
+    border-radius: 8px;
+    padding: 0.6rem 0.8rem;
+    transition: var(--transicion);
+}
+.formulario__campo:focus-visible {
+    border-color: var(--color-secundario);           /* resalte al enfocar */
+    outline: 3px solid rgba(46, 125, 50, 0.25);      /* anillo de foco accesible */
+}
+.formulario__campo--area    { resize: vertical; min-height: 110px; }
+.formulario__campo--archivo { padding: 0.7rem 0.8rem; background-color: #FBFDFB; }
+
+/* Texto de ayuda bajo el campo (instrucciones paso a paso) */
+.formulario__ayuda {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--color-texto-suave);
+    margin-top: 0.3rem;
+}
+
+/* Formulario horizontal (buscador de folio): campo + botón en una fila */
+.formulario--horizontal {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+}
+.formulario--horizontal .formulario__grupo { flex: 1 1 260px; margin-bottom: 0; }
+
+/* Caja de resultado del folio / confirmaciones (verde suave, borde de éxito) */
+.formulario__resultado {
+    margin-top: 1.2rem;
+    padding: 1rem 1.2rem;
+    border-radius: var(--radio-borde);
+    background-color: #E8F5E9;
+    border-left: 5px solid var(--color-exito);
+    font-size: 1.02rem;
+    display: none;                     /* JS la muestra solo cuando hay resultado */
+}
+.formulario__resultado:not(:empty) { display: block; }
+
+/* -------- Resultado del buscador de estatus -------- */
+.estatus__resultado { max-width: 640px; margin: 1.2rem auto 0 auto; }
+.estatus__tarjeta {
+    background-color: var(--color-tarjeta);
+    border: 1px solid var(--color-borde);
+    border-left: 5px solid var(--color-secundario);
+    border-radius: var(--radio-borde);
+    padding: 1.2rem 1.4rem;
+    box-shadow: var(--sombra-suave);
+}
+.estatus__linea { margin-top: 0.4rem; color: var(--color-texto-suave); }
+.estatus__mensaje--error {
+    display: block;
+    background-color: #FFEBEE;
+    border-left: 5px solid var(--color-peligro);
+    border-radius: var(--radio-borde);
+    padding: 0.9rem 1.1rem;
+    color: var(--color-peligro);
+    font-weight: 600;
+}
+
+
+/* ==================== 10. COMITÉS VECINALES (CSS GRID) ==================== */
+.propuestas__contenedor {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: center;
+}
+.propuestas__contenedor > .formulario { flex: 1 1 340px; margin: 0; }
+.propuestas__contenedor > .comites__rejilla { flex: 1 1 420px; }
+
+/* GRID de comités: 1 columna móvil -> 2 columnas tablet/escritorio */
+.comites__rejilla {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
+}
+.comite {
+    background-color: var(--color-tarjeta);
+    border: 1px solid var(--color-borde);
+    border-left: 5px solid var(--color-secundario);
+    border-radius: var(--radio-borde);
+    padding: 1.2rem 1.3rem;
+    box-shadow: var(--sombra-suave);
+    transition: var(--transicion);
+}
+.comite:hover { transform: translateY(-5px); border-left-color: var(--color-acento); }
+.comite__icono { font-size: 2rem; }
+.comite__titulo {
+    font-family: var(--fuente-titulos);
+    font-size: 1.15rem;
+    color: var(--color-primario);
+    margin: 0.3rem 0;
+}
+.comite__texto { font-size: 0.93rem; color: var(--color-texto-suave); }
+
+
+/* ==================== 11. AVISOS OFICIALES (ETIQUETAS DE ESTADO) ==================== */
+.avisos { margin-bottom: 2.5rem; }
+
+.aviso {
+    background-color: var(--color-tarjeta);
+    border-left: 5px solid var(--color-acento);
+    border-radius: var(--radio-borde);
+    padding: 1.4rem 1.5rem;
+    margin-bottom: 1.4rem;
+    box-shadow: var(--sombra-suave);
+    transition: var(--transicion);
+}
+.aviso:hover { border-left-color: var(--color-secundario); transform: translateX(4px); }
+
+/* Fila de metadatos: etiqueta de estado + fecha */
+.aviso__meta {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--color-texto-suave);
+}
+
+/* -------- Etiquetas visuales de estado (píldoras de color) -------- */
+.etiqueta {
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: #FFFFFF;
+    padding: 0.25rem 0.7rem;
+    border-radius: 20px;
+}
+.etiqueta--urgente      { background-color: var(--color-peligro); } /* rojo = urgente */
+.etiqueta--convocatoria { background-color: var(--color-acento); color: #3E2723; } /* ámbar */
+.etiqueta--informativo  { background-color: var(--color-info); }    /* azul = informativo */
+
+.aviso__titulo {
+    font-family: var(--fuente-titulos);
+    font-size: 1.2rem;
+    color: var(--color-texto);
+    margin-bottom: 0.5rem;
+}
+.aviso__texto { color: var(--color-texto-suave); font-size: 0.97rem; }
+
+
+/* ==================== 12. TRANSPARENCIA ==================== */
+.transparencia__lista { list-style: none; }
+
+.transparencia__item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    background-color: var(--color-tarjeta);
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radio-borde);
+    padding: 0.9rem 1.2rem;
+    margin-bottom: 0.7rem;
+    box-shadow: var(--sombra-suave);
+    transition: var(--transicion);
+}
+.transparencia__item:hover { border-color: var(--color-secundario); transform: translateX(4px); }
+
+.transparencia__documento { font-weight: 600; font-size: 0.98rem; }
+
+/* Botón de descarga simulada (PDF) */
+.transparencia__descarga {
+    background-color: var(--color-secundario);
+    color: #FFFFFF;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 700;
+    padding: 0.45rem 0.9rem;
+    border-radius: 8px;
+    white-space: nowrap;
+    transition: var(--transicion);
+}
+.transparencia__descarga:hover { background-color: var(--color-primario); }
+
+
+/* ==================== 13. BARRA LATERAL / EVENTOS (ASIDE) ====================
+   FLEXBOX: avisos + transparencia (principal) al lado del <aside>. */
+.contenido-lateral {
+    max-width: var(--ancho-maximo);
+    margin: 0 auto;
+    padding: 0 1.2rem 3rem 1.2rem;
+    display: flex;
+    gap: 2.2rem;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+.contenido-lateral__principal { flex: 1 1 55%; min-width: 0; }
+.lateral { flex: 1 1 320px; display: flex; flex-direction: column; gap: 1.6rem; }
+
+/* Widgets verdes de la barra lateral */
+.lateral__widget {
+    background-color: var(--color-primario);
+    color: #FFFFFF;
+    border-radius: var(--radio-borde);
+    padding: 1.5rem 1.4rem;
+    box-shadow: var(--sombra-suave);
+}
+.lateral__titulo {
+    font-family: var(--fuente-titulos);
+    font-size: 1.25rem;
+    color: var(--color-acento);
+    margin-bottom: 0.9rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+    padding-bottom: 0.5rem;
+}
+.lateral__lista { list-style: none; font-size: 0.92rem; }
+.lateral__lista li {
+    padding: 0.3rem 0;
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.2);
+}
+
+/* Lista de eventos (ol) */
+.eventos__lista { list-style: none; }
+.evento {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.8rem;
+    padding: 0.55rem 0;
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.2);
+}
+.evento:last-child { border-bottom: none; }
+/* Etiqueta de fecha destacada (ámbar) */
+.evento__fecha {
+    background-color: var(--color-acento);
+    color: #3E2723;
+    font-weight: 700;
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 6px;
+    white-space: nowrap;
+}
+.evento__descripcion { font-size: 0.9rem; opacity: 0.92; }
+
+
+/* ==================== 14. PREGUNTAS FRECUENTES (FAQ) ==================== */
+.faq {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 2.5rem 1.2rem 3.5rem 1.2rem;
+}
+
+/* Cada pregunta es un <details> nativo: acordeón accesible sin JavaScript */
+.faq__item {
+    background-color: var(--color-tarjeta);
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radio-borde);
+    margin-bottom: 0.9rem;
+    box-shadow: var(--sombra-suave);
+    overflow: hidden;
+}
+
+/* La pregunta visible (<summary>): área de toque grande */
+.faq__pregunta {
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--color-primario);
+    padding: 1.1rem 1.3rem;
+    cursor: pointer;
+    list-style: none;                  /* se oculta el triángulo nativo... */
+    position: relative;
+    min-height: 48px;
+}
+/* ...y se reemplaza por un indicador + / − claro */
+.faq__pregunta::after {
+    content: "+";
+    position: absolute;
+    right: 1.2rem;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--color-acento);
+    transition: transform 0.2s ease;
+}
+.faq__item[open] .faq__pregunta::after { content: "−"; }
+
+/* Resaltado del summary al pasar el mouse o navegar con teclado */
+.faq__pregunta:hover,
+.faq__pregunta:focus-visible { background-color: #E8F5E9; outline: none; }
+
+.faq__respuesta {
+    padding: 0 1.3rem 1.2rem 1.3rem;
+    color: var(--color-texto-suave);
+    border-top: 1px dashed var(--color-borde);
+    padding-top: 0.9rem;
+}
+
+
+/* ==================== 15. PIE DE PÁGINA (CSS GRID) ==================== */
+.pie {
+    background-color: #123D16;         /* verde más oscuro que el encabezado */
+    color: #FFFFFF;
+    padding-top: 2.8rem;
+}
+
+/* GRID: 1 columna móvil -> 3 columnas escritorio */
+.pie__contenedor {
+    max-width: var(--ancho-maximo);
+    margin: 0 auto;
+    padding: 0 1.2rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+}
+.pie__titulo {
+    font-family: var(--fuente-titulos);
+    font-size: 1.15rem;
+    color: var(--color-acento);
+    margin-bottom: 0.8rem;
+}
+/* <address> se escribe normal (sin cursiva) para máxima legibilidad */
+.pie__direccion { font-style: normal; font-size: 0.92rem; opacity: 0.9; line-height: 1.7; }
+
+.pie__lista { list-style: none; font-size: 0.92rem; }
+.pie__lista li { padding: 0.28rem 0; opacity: 0.9; }
+
+/* Enlaces del pie: subrayado animado al pasar el mouse */
+.pie__enlace {
+    color: #FFFFFF;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: var(--transicion);
+}
+.pie__enlace:hover { color: var(--color-acento); border-bottom-color: var(--color-acento); }
+
+/* Franja legal inferior */
+.pie__legal {
+    margin-top: 2.2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    text-align: center;
+    padding: 1.1rem 1.2rem;
+    font-size: 0.85rem;
+    opacity: 0.75;
+}
+
+
+/* ==================== 16. MEDIA QUERIES (MOBILE FIRST: CELULAR -> TABLET -> ESCRITORIO) ====================
+   La base (todo lo anterior) YA es de celular. Aquí se AMPLÍA el diseño
+   con min-width para tablet y escritorio. */
+
+/* -------- TABLET: desde 640px -------- */
+@media (min-width: 640px) {
+    /* Hero: texto e ilustración pueden ir más holgados */
+    .hero h1 { font-size: 2.8rem; }
+
+    /* Emergencias: 2 columnas */
+    .emergencias__rejilla { grid-template-columns: repeat(2, 1fr); }
+
+    /* Trámites: 2 columnas */
+    .tramites__rejilla { grid-template-columns: repeat(2, 1fr); }
+
+    /* Comités: 2 columnas */
+    .comites__rejilla { grid-template-columns: repeat(2, 1fr); }
+
+    /* Pie: 2 columnas */
+    .pie__contenedor { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* -------- ESCRITORIO: desde 960px -------- */
+@media (min-width: 960px) {
+    /* Emergencias: 4 columnas (una por número) */
+    .emergencias__rejilla { grid-template-columns: repeat(4, 1fr); }
+
+    /* Trámites: 4 columnas */
+    .tramites__rejilla { grid-template-columns: repeat(4, 1fr); }
+
+    /* Pie: 3 columnas definitivas */
+    .pie__contenedor { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* -------- MENÚ MÓVIL: comportamiento hamburguesa (solo hasta 899px) -------- */
+@media (max-width: 899px) {
+    /* Se muestra el botón hamburguesa */
+    .menu-toggle { display: inline-flex; align-items: center; gap: 0.4rem; }
+
+    /* El menú queda oculto y se despliega vertical al activarse con JS */
+    .navegacion { width: 100%; }
+    .navegacion__lista {
+        display: none;                    /* oculto por defecto en móvil */
+        flex-direction: column;
+        width: 100%;
+    }
+    /* Clase que JavaScript activa al pulsar el botón ☰ */
+    .navegacion--abierta .navegacion__lista { display: flex; }
+
+    /* Enlaces del menú móvil: ocupan todo el ancho y tienen área de toque grande */
+    .navegacion__enlace {
+        display: block;
+        padding: 0.9rem 1rem;
+        border-radius: 8px;
+        background-color: rgba(255, 255, 255, 0.08);
+        margin-bottom: 0.3rem;
+        font-size: 1.05rem;
+    }
+}
+
+/* -------- ACCESIBILIDAD: MOVIMIENTO REDUCIDO --------
+   Si el usuario tiene activada la preferencia de reducir animaciones
+   del sistema operativo, se desactivan las transiciones. */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        transition: none !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* ============================================================================
+   FIN DE LA HOJA DE ESTILOS styles.css
+============================================================================ */

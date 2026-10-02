@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<!-- ============================================================================
+     PROYECTO FINAL: INICIO - SISTEMA DE GESTIÓN CIUDADANA  (VERSIÓN 2.0 MEJORADA)
+     Institución: CONSEJO DE PARTICIPACIÓN CIUDADANA (COPACI) GRANJAS GUADALUPE
+     Municipio:  Nicolás Romero, Estado de México
+     Materia:    Programación Construye Apps Web   |  Tema: Maquetación HTML5 y CSS3
+     Archivo:    index.html
+     Autor:      [Nombre del alumno] | N.L: [Número de lista] | Grupo: [Grupo]
+     ----------------------------------------------------------------------------
+     MEJORAS DE ESTA VERSIÓN:
+       + Barra de accesibilidad (A+ / A- / Alto Contraste) para adultos mayores
+         y personas con discapacidad visual.
+       + Directorio de emergencias de Nicolás Romero con llamadas directas tel:.
+       + Formulario de Reporte Ciudadano con generación de Folio de Seguimiento.
+       + Buscador de estatus por folio.
+       + Buzón de Propuestas y tarjetas de Comités Vecinales.
+       + Avisos con etiquetas de estado, módulo de Transparencia y calendario.
+       + Preguntas Frecuentes (FAQ) con <details>/<summary> (accesible).
+       + Diseño Mobile First con CSS Grid y Flexbox.
+     NOTA TÉCNICA: al exigirse SOLO dos archivos (HTML + CSS), la lógica
+     interactiva (accesibilidad, folios, búsqueda, menú móvil) viaja en un
+     pequeño <script> al final del body. La presentación sigue 100% en styles.css.
+============================================================================ -->
+
+<html lang="es">
+<!-- <html>: raíz del documento. lang="es" declara el idioma para lectores de
+     pantalla y buscadores (buena práctica de accesibilidad). -->
+
+<head>
+    <!-- ===================== CABECERA DEL DOCUMENTO (NO VISIBLE) ===================== -->
+    <meta charset="UTF-8">
+    <!-- charset UTF-8: permite acentos y caracteres del español -->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- viewport: base del diseño RESPONSIVO / MOBILE FIRST -->
+
+    <meta name="description" content="Portal ciudadano del COPACI Granjas Guadalupe, Nicolás Romero, Edomex: trámites gratuitos, reportes con folio, emergencias, transparencia y atención ciudadana.">
+    <title>Inicio | Sistema de Gestión Ciudadana - COPACI Granjas Guadalupe</title>
+
+    <!-- ENLACE A LA HOJA DE ESTILOS EXTERNA (requisito obligatorio) -->
+    <link rel="stylesheet" href="styles.css">
+<base target="_blank">
+</head>
+
+<body>
+    <!-- ================= ENLACE DE SALTO (ACCESIBILIDAD PARA LECTORES DE PANTALLA) =================
+         Permite saltar directamente al contenido principal sin recorrer todo el menú. -->
+    <a href="#contenido-principal" class="salto-enlace">Saltar al contenido principal</a>
+
+    <!-- =========================== BARRA DE ACCESIBILIDAD ===========================
+         Barra superior con controles para aumentar/disminuir la letra y activar el
+         Modo de Alto Contraste. Pensada para adultos mayores y personas con baja visión. -->
+    <div class="barra-accesibilidad" role="toolbar" aria-label="Opciones de accesibilidad">
+        <!-- Botón para REDUCIR el tamaño de letra (dispara la función jsCambiarLetra(-1)) -->
+        <button type="button" id="btnLetraMenor" class="accesibilidad__boton"
+                aria-label="Disminuir tamaño de letra">A-</button>
+        <!-- Botón para AUMENTAR el tamaño de letra -->
+        <button type="button" id="btnLetraMayor" class="accesibilidad__boton"
+                aria-label="Aumentar tamaño de letra">A+</button>
+        <!-- Botón conmutador del MODO DE ALTO CONTRASTE -->
+        <button type="button" id="btnContraste" class="accesibilidad__boton accesibilidad__boton--contraste"
+                aria-pressed="false" aria-label="Activar o desactivar modo de alto contraste">
+            &#9680; Alto Contraste
+        </button>
+    </div>
+
+    <!-- ============================= ENCABEZADO DEL SITIO =============================
+         <header>: etiqueta semántica que agrupa la identidad institucional
+         (logotipo + nombre) y la barra de navegación principal. -->
+    <header class="encabezado" id="inicio">
+        <div class="encabezado__contenedor">
+
+            <!-- Identidad institucional: logotipo y nombre del COPACI -->
+            <a href="#inicio" class="marca" aria-label="Ir al inicio del portal COPACI Granjas Guadalupe">
+                <img src="compas.jpeg" alt="Logotipo del Consejo de Participación Ciudadana COPACI Granjas Guadalupe" class="marca__logo">
+                <span class="marca__texto">
+                    <strong>COPACI</strong>
+                    <small>Granjas Guadalupe, Nicolás Romero</small>
+                </span>
+            </a>
+
+            <!-- Botón hamburguesa: solo visible en celular (controlado por CSS y JS) -->
+            <button type="button" id="btnMenu" class="menu-toggle" aria-label="Abrir o cerrar el menú de navegación" aria-expanded="false">
+                &#9776; Menú
+            </button>
+
+            <!-- ================== BARRA DE NAVEGACIÓN PRINCIPAL ================== -->
+            <nav class="navegacion" id="navPrincipal" aria-label="Navegación principal del portal">
+                <ul class="navegacion__lista">
+                    <li><a href="#inicio" class="navegacion__enlace">Inicio</a></li>
+                    <li><a href="#tramites" class="navegacion__enlace">Trámites</a></li>
+                    <li><a href="#reporte" class="navegacion__enlace">Reportar</a></li>
+                    <li><a href="#emergencias" class="navegacion__enlace">Emergencias</a></li>
+                    <li><a href="#transparencia" class="navegacion__enlace">Transparencia</a></li>
+                    <li><a href="#faq" class="navegacion__enlace">Preguntas</a></li>
+                    <li><a href="#contacto" class="navegacion__enlace">Contacto</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ================================ CONTENIDO PRINCIPAL ================================ -->
+    <main id="contenido-principal">
+
+        <!-- ======================= SECCIÓN HERO (BIENVENIDA) =======================
+             Presenta el propósito del portal, una guía rápida en 3 pasos para
+             adultos mayores y los botones de acción principales. -->
+        <section class="hero" aria-labelledby="titulo-hero">
+            <div class="hero__contenido">
+                <h1 id="titulo-hero">Sistema de Gestión Ciudadana</h1>
+                <p class="hero__subtitulo">Consejo de Participación Ciudadana de Granjas Guadalupe, Nicolás Romero</p>
+                <p class="hero__descripcion">
+                    Realice trámites gratuitos, reporte fallas de su colonia y haga
+                    seguimiento con su folio. Todo desde un solo portal, sin filas
+                    ni complicaciones.
+                </p>
+
+                <!-- GUÍA RÁPIDA EN 3 PASOS: instrucciones paso a paso para adultos mayores -->
+                <ol class="pasos" aria-label="Guía rápida de uso del portal en tres pasos">
+                    <li class="pasos__item">
+                        <span class="pasos__numero" aria-hidden="true">1</span>
+                        <span class="pasos__texto"><strong>Selecciona tu trámite</strong> o el tipo de falla que quieres reportar.</span>
+                    </li>
+                    <li class="pasos__item">
+                        <span class="pasos__numero" aria-hidden="true">2</span>
+                        <span class="pasos__texto"><strong>Completa el formulario</strong> en línea o llama a la oficina del COPACI.</span>
+                    </li>
+                    <li class="pasos__item">
+                        <span class="pasos__numero" aria-hidden="true">3</span>
+                        <span class="pasos__texto"><strong>Guarda tu folio</strong> para consultar el avance cuando quieras.</span>
+                    </li>
+                </ol>
+
+                <!-- Botones de acción principales del portal -->
+                <div class="hero__acciones">
+                    <button type="button" class="boton boton--primario"
+                        onclick="location.href='#tramites'">Realizar un trámite</button>
+                    <button type="button" class="boton boton--secundario"
+                        onclick="location.href='#emergencias'">Directorio de emergencias</button>
+                </div>
+            </div>
+
+            <!-- Ilustración local del hero (SVG propio, sin dependencias de internet) -->
+            <figure class="hero__figura">
+                <img src="coco.jpg" alt="Ilustración de vecinos de Granjas Guadalupe participando frente al módulo del consejo">
+            </figure>
+        </section>
+
+        <!-- ==================== DIRECTORIO DE EMERGENCIAS (NICOLÁS ROMERO) ====================
+             Módulo destacado con botones de llamada directa (enlaces tel:).
+             Se ubica arriba porque es información crítica para la ciudadanía. -->
+        <section class="emergencias" id="emergencias" aria-labelledby="titulo-emergencias">
+            <h2 id="titulo-emergencias" class="seccion-titulo seccion-titulo--blanco">&#9888; Directorio de Emergencias</h2>
+            <p class="seccion-descripcion seccion-descripcion--blanca">
+                Números oficiales del municipio de Nicolás Romero. En una emergencia
+                marque desde su celular tocando el botón.
+            </p>
+
+            <!-- Rejilla de botones de llamada directa (CSS Grid) -->
+            <div class="emergencias__rejilla">
+                <!-- Cada tarjeta es un enlace tel: para llamar con un toque en el celular -->
+                <a href="tel:+525558233180" class="emergencia emergencia--critica">
+                    <span class="emergencia__icono" aria-hidden="true">&#128680;</span>
+                    <span class="emergencia__nombre">C4 / Policía Municipal</span>
+                    <span class="emergencia__numero">55 5823 3180</span>
+                    <span class="emergencia__hint">Tocar para llamar</span>
+                </a>
+                <a href="tel:+525558230038" class="emergencia emergencia--critica">
+                    <span class="emergencia__icono" aria-hidden="true">&#128293;</span>
+                    <span class="emergencia__nombre">Protección Civil y Bomberos</span>
+                    <span class="emergencia__numero">55 5823 0038</span>
+                    <span class="emergencia__hint">Tocar para llamar</span>
+                </a>
+                <a href="tel:+525558233088" class="emergencia">
+                    <span class="emergencia__icono" aria-hidden="true">&#128167;</span>
+                    <span class="emergencia__nombre">SAPASNIR (Agua Potable)</span>
+                    <span class="emergencia__numero">55 5823 3088</span>
+                    <span class="emergencia__hint">Tocar para llamar</span>
+                </a>
+                <a href="tel:089" class="emergencia">
+                    <span class="emergencia__icono" aria-hidden="true">&#128263;</span>
+                    <span class="emergencia__nombre">Denuncia Anónima</span>
+                    <span class="emergencia__numero">089</span>
+                    <span class="emergencia__hint">Tocar para llamar</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- ==================== SECCIÓN TRÁMITES Y SERVICIOS (CSS GRID) ====================
+             Tarjetas de servicios gratuitos disponibles para la ciudadanía. -->
+        <section class="tramites" id="tramites" aria-labelledby="titulo-tramites">
+            <h2 id="titulo-tramites" class="seccion-titulo">Trámites y Servicios</h2>
+            <p class="seccion-descripcion">
+                Todos los trámites del COPACI son <strong>100% gratuitos</strong>.
+                Seleccione el servicio que desea gestionar.
+            </p>
+
+            <div class="tramites__rejilla">
+
+                <!-- Tarjeta 1: Constancia de residencia -->
+                <article class="tarjeta">
+                    <span class="tarjeta__icono" aria-hidden="true">&#127968;</span>
+                    <h3 class="tarjeta__titulo">Constancia de Residencia</h3>
+                    <p class="tarjeta__texto">
+                        Documento que acredita su residencia en Granjas Guadalupe.
+                        Se entrega en máximo 3 días hábiles.
+                    </p>
+                    <button type="button" class="boton boton--tarjeta" onclick="location.href='#reporte'">Iniciar solicitud</button>
+                </article>
+
+                <!-- Tarjeta 2: Reporte ciudadano -->
+                <article class="tarjeta">
+                    <span class="tarjeta__icono" aria-hidden="true">&#128226;</span>
+                    <h3 class="tarjeta__titulo">Reporte Ciudadano</h3>
+                    <p class="tarjeta__texto">
+                        Reporte baches, alumbrado, fugas, basura o problemas de
+                        seguridad. Reciba un folio de seguimiento.
+                    </p>
+                    <button type="button" class="boton boton--tarjeta" onclick="location.href='#reporte'">Generar reporte</button>
+                </article>
+
+                <!-- Tarjeta 3: Solicitud de apoyos -->
+                <article class="tarjeta">
+                    <span class="tarjeta__icono" aria-hidden="true">&#129309;</span>
+                    <h3 class="tarjeta__titulo">Solicitud de Apoyos</h3>
+                    <p class="tarjeta__texto">
+                        Registre su solicitud de apoyo comunitario ante el consejo
+                        para su valoración en asamblea.
+                    </p>
+                    <button type="button" class="boton boton--tarjeta" onclick="location.href='#propuestas'">Registrar solicitud</button>
+                </article>
+
+                <!-- Tarjeta 4: Registro a comités -->
+                <article class="tarjeta">
+                    <span class="tarjeta__icono" aria-hidden="true">&#128101;</span>
+                    <h3 class="tarjeta__titulo">Registro a Comités Vecinales</h3>
+                    <p class="tarjeta__texto">
+                        Inscríbase a los comités de obra, ecología, seguridad o
+                        deporte de la colonia.
+                    </p>
+                    <button type="button" class="boton boton--tarjeta" onclick="location.href='#propuestas'">Inscribirme</button>
+                </article>
+            </div>
+        </section>
+
+        <!-- ==================== FORMULARIO DE REPORTE CIUDADANO ====================
+             <form> semántico para que el vecino reporte incidencias de la colonia.
+             Al enviarlo, JavaScript simula la generación de un Folio de Seguimiento. -->
+        <section class="reporte" id="reporte" aria-labelledby="titulo-reporte">
+            <h2 id="titulo-reporte" class="seccion-titulo">Reporte Ciudadano</h2>
+            <p class="seccion-descripcion">
+                Cuéntanos qué está pasando en tu calle. Campos marcados con
+                <span aria-hidden="true">*</span> <span class="sr-only">asterisco</span> son obligatorios.
+            </p>
+
+            <!-- action="#": al no existir servidor, JS intercepta el envío (preventDefault)
+                 y muestra el folio generado en la misma página. -->
+            <form id="formReporte" class="formulario" action="#" method="post" enctype="multipart/form-data">
+
+                <!-- Campo 1: Tipo de falla (lista desplegable) -->
+                <div class="formulario__grupo">
+                    <label for="tipoFalla" class="formulario__etiqueta">Tipo de falla *</label>
+                    <select id="tipoFalla" name="tipoFalla" class="formulario__campo" required>
+                        <option value="">-- Seleccione una opción --</option>
+                        <option value="Bacheo">Bacheo</option>
+                        <option value="Alumbrado">Alumbrado público</option>
+                        <option value="Fuga de agua">Fuga de agua</option>
+                        <option value="Basura">Recolección de basura</option>
+                        <option value="Seguridad">Seguridad</option>
+                    </select>
+                </div>
+
+                <!-- Campo 2: Calle / ubicación exacta -->
+                <div class="formulario__grupo">
+                    <label for="ubicacion" class="formulario__etiqueta">Calle y ubicación exacta *</label>
+                    <input type="text" id="ubicacion" name="ubicacion" class="formulario__campo"
+                           placeholder="Ej. Av. Granjas, frente al número 24" required>
+                </div>
+
+                <!-- Campo 3: Descripción del problema (área de texto) -->
+                <div class="formulario__grupo">
+                    <label for="descripcion" class="formulario__etiqueta">Descripción del problema *</label>
+                    <textarea id="descripcion" name="descripcion" class="formulario__campo formulario__campo--area"
+                              rows="4" placeholder="Describa con detalle lo que observa..." required></textarea>
+                </div>
+
+                <!-- Campo 4: Adjuntar fotografía de evidencia (opcional) -->
+                <div class="formulario__grupo">
+                    <label for="evidencia" class="formulario__etiqueta">Adjuntar fotografía (opcional)</label>
+                    <input type="file" id="evidencia" name="evidencia" class="formulario__campo formulario__campo--archivo"
+                           accept="image/*">
+                    <small class="formulario__ayuda">Puede tomar una foto con su celular para agilizar la atención.</small>
+                </div>
+
+                <!-- Botón de envío: dispara la generación del folio -->
+                <button type="submit" class="boton boton--primario boton--ancho">Enviar reporte y generar folio</button>
+
+                <!-- Zona donde JavaScript muestra el folio generado (role=status: los
+                     lectores de pantalla la anuncian automáticamente) -->
+                <div id="resultadoFolio" class="formulario__resultado" role="status" aria-live="polite"></div>
+            </form>
+        </section>
+
+        <!-- ==================== BUSCADOR DE ESTATUS POR FOLIO ====================
+             El ciudadano ingresa su folio (ej. GRP-2026-01) y consulta el avance. -->
+        <section class="estatus" id="estatus" aria-labelledby="titulo-estatus">
+            <h2 id="titulo-estatus" class="seccion-titulo">Consulta el Estatus de tu Trámite</h2>
+            <p class="seccion-descripcion">
+                Ingrese el folio que recibió al registrar su reporte, por ejemplo
+                <strong>GRP-2026-01</strong>.
+            </p>
+
+            <form id="formEstatus" class="formulario formulario--horizontal" action="#" method="get">
+                <div class="formulario__grupo">
+                    <label for="folio" class="formulario__etiqueta">Folio de seguimiento</label>
+                    <input type="text" id="folio" name="folio" class="formulario__campo"
+                           placeholder="GRP-2026-01" pattern="GRP-[0-9]{4}-[0-9]{2}"
+                           title="Formato: GRP-AÑO-NÚMERO, por ejemplo GRP-2026-01">
+                </div>
+                <button type="submit" class="boton boton--secundario-oscuro">Consultar</button>
+            </form>
+
+            <!-- Resultado simulado de la consulta (anunciado a lectores de pantalla) -->
+            <div id="resultadoEstatus" class="estatus__resultado" role="status" aria-live="polite"></div>
+        </section>
+
+        <!-- ==================== BUZÓN DE PROPUESTAS Y COMITÉS VECINALES ====================
+             Dos bloques: formulario de ideas de mejora + tarjetas informativas
+             de los comités vecinales de la colonia. -->
+        <section class="propuestas" id="propuestas" aria-labelledby="titulo-propuestas">
+            <h2 id="titulo-propuestas" class="seccion-titulo">Buzón de Propuestas y Comités Vecinales</h2>
+            <p class="seccion-descripcion">
+                Su voz cuenta: envíe ideas de mejora para la colonia o únase a un
+                comité vecinal.
+            </p>
+
+            <div class="propuestas__contenedor">
+                <!-- -------- Formulario simplificado del buzón de propuestas -------- -->
+                <form id="formPropuesta" class="formulario" action="#" method="post">
+                    <div class="formulario__grupo">
+                        <label for="nombrePropuesta" class="formulario__etiqueta">Su nombre *</label>
+                        <input type="text" id="nombrePropuesta" name="nombrePropuesta" class="formulario__campo" required>
+                    </div>
+                    <div class="formulario__grupo">
+                        <label for="temaPropuesta" class="formulario__etiqueta">Tema de la propuesta *</label>
+                        <select id="temaPropuesta" name="temaPropuesta" class="formulario__campo" required>
+                            <option value="">-- Seleccione un tema --</option>
+                            <option value="Obras">Obras y servicios</option>
+                            <option value="Ecología">Ecología</option>
+                            <option value="Seguridad">Seguridad</option>
+                            <option value="Deporte">Deporte</option>
+                            <option value="Otro">Otro</option>
+                        </select>
+                    </div>
+                    <div class="formulario__grupo">
+                        <label for="mensajePropuesta" class="formulario__etiqueta">Su idea de mejora *</label>
+                        <textarea id="mensajePropuesta" name="mensajePropuesta" class="formulario__campo formulario__campo--area"
+                                  rows="4" placeholder="Ej. Instalar más luminarias en el parque..." required></textarea>
+                    </div>
+                    <button type="submit" class="boton boton--primario boton--ancho">Enviar propuesta</button>
+                    <div id="resultadoPropuesta" class="formulario__resultado" role="status" aria-live="polite"></div>
+                </form>
+
+                <!-- -------- Tarjetas informativas de los Comités Vecinales (CSS Grid) -------- -->
+                <div class="comites__rejilla">
+                    <article class="comite">
+                        <span class="comite__icono" aria-hidden="true">&#127959;</span>
+                        <h3 class="comite__titulo">Obras y Servicios</h3>
+                        <p class="comite__texto">Da seguimiento a pavimentación, drenaje y alumbrado público de la colonia.</p>
+                    </article>
+                    <article class="comite">
+                        <span class="comite__icono" aria-hidden="true">&#127807;</span>
+                        <h3 class="comite__titulo">Ecología</h3>
+                        <p class="comite__texto">Organiza jornadas de limpieza, reforestación y cuidado de áreas verdes.</p>
+                    </article>
+                    <article class="comite">
+                        <span class="comite__icono" aria-hidden="true">&#128737;</span>
+                        <h3 class="comite__titulo">Seguridad</h3>
+                        <p class="comite__texto">Coordina con la policía municipal y veedores vecinales de seguridad.</p>
+                    </article>
+                    <article class="comite">
+                        <span class="comite__icono" aria-hidden="true">&#9917;</span>
+                        <h3 class="comite__titulo">Deporte</h3>
+                        <p class="comite__texto">Promueve torneos, activación física y mantenimiento de espacios deportivos.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ ZONA FLEXIBLE: AVISOS + TRANSPARENCIA (izq.) / EVENTOS (aside) ============ -->
+        <div class="contenido-lateral">
+
+            <!-- Contenedor principal de las columnas izquierdas -->
+            <div class="contenido-lateral__principal">
+
+                <!-- ==================== AVISOS OFICIALES ====================
+                     Cada aviso es un <article> con una etiqueta visual de estado. -->
+                <section class="avisos" id="avisos" aria-labelledby="titulo-avisos">
+                    <h2 id="titulo-avisos" class="seccion-titulo seccion-titulo--izquierda">Avisos Oficiales</h2>
+
+                    <!-- Aviso 1: etiqueta URGENTE -->
+                    <article class="aviso">
+                        <p class="aviso__meta">
+                            <span class="etiqueta etiqueta--urgente">URGENTE</span>
+                            <time datetime="2026-09-15">15 de septiembre de 2026</time>
+                        </p>
+                        <h3 class="aviso__titulo">Suspensión temporal de agua por mantenimiento</h3>
+                        <p class="aviso__texto">
+                            SAPASNIR informa un corte de agua el próximo jueves de 9:00 a
+                            15:00 h por mantenimiento de la red. Se recomienda almacenar
+                            agua con anticipación.
+                        </p>
+                    </article>
+
+                    <!-- Aviso 2: etiqueta CONVOCATORIA -->
+                    <article class="aviso">
+                        <p class="aviso__meta">
+                            <span class="etiqueta etiqueta--convocatoria">CONVOCATORIA</span>
+                            <time datetime="2026-09-08">8 de septiembre de 2026</time>
+                        </p>
+                        <h3 class="aviso__titulo">Asamblea General Ordinaria del COPACI</h3>
+                        <p class="aviso__texto">
+                            Se convoca a todas las y los vecinos a la asamblea donde se
+                            presentará el informe anual y el presupuesto participativo 2027.
+                        </p>
+                    </article>
+
+                    <!-- Aviso 3: etiqueta INFORMATIVO -->
+                    <article class="aviso">
+                        <p class="aviso__meta">
+                            <span class="etiqueta etiqueta--informativo">INFORMATIVO</span>
+                            <time datetime="2026-09-01">1 de septiembre de 2026</time>
+                        </p>
+                        <h3 class="aviso__titulo">Actualización del padrón de comités vecinales</h3>
+                        <p class="aviso__texto">
+                            El padrón de integrantes está en actualización. Puede
+                            inscribirse desde la sección de Comités Vecinales de este portal.
+                        </p>
+                    </article>
+                </section>
+
+                <!-- ==================== MÓDULO DE TRANSPARENCIA ====================
+                     Lista de minutas de asambleas e informes descargables (simulados). -->
+                <section class="transparencia" id="transparencia" aria-labelledby="titulo-transparencia">
+                    <h2 id="titulo-transparencia" class="seccion-titulo seccion-titulo--izquierda">Transparencia</h2>
+                    <p class="seccion-descripcion seccion-descripcion--izquierda">
+                        Consulte las minutas de asambleas e informes del consejo.
+                        Documentos públicos y gratuitos.
+                    </p>
+                    <ul class="transparencia__lista">
+                        <li class="transparencia__item">
+                            <span class="transparencia__documento">Minuta Asamblea General - Agosto 2026</span>
+                            <a href="#" class="transparencia__descarga" download>Descargar PDF</a>
+                        </li>
+                        <li class="transparencia__item">
+                            <span class="transparencia__documento">Informe Anual de Actividades 2025</span>
+                            <a href="#" class="transparencia__descarga" download>Descargar PDF</a>
+                        </li>
+                        <li class="transparencia__item">
+                            <span class="transparencia__documento">Minuta Asamblea General - Junio 2026</span>
+                            <a href="#" class="transparencia__descarga" download>Descargar PDF</a>
+                        </li>
+                        <li class="transparencia__item">
+                            <span class="transparencia__documento">Presupuesto Participativo 2026</span>
+                            <a href="#" class="transparencia__descarga" download>Descargar PDF</a>
+                        </li>
+                    </ul>
+                </section>
+            </div>
+
+            <!-- ========================== BARRA LATERAL ==========================
+                 <aside>: calendario de eventos y talleres comunales. -->
+            <aside class="lateral" aria-label="Calendario de eventos y atención ciudadana">
+
+                <!-- Widget: próximos eventos (lista ordenada) -->
+                <div class="lateral__widget" id="eventos">
+                    <h3 class="lateral__titulo">&#128197; Próximos Eventos</h3>
+                    <ol class="eventos__lista">
+                        <li class="evento">
+                            <span class="evento__fecha">05 OCT</span>
+                            <span class="evento__descripcion">Reunión del Comité de Obras y Servicios, 17:00 h, módulo del COPACI.</span>
+                        </li>
+                        <li class="evento">
+                            <span class="evento__fecha">12 OCT</span>
+                            <span class="evento__descripcion">Taller gratuito de participación ciudadana para adultos mayores, 10:00 h.</span>
+                        </li>
+                        <li class="evento">
+                            <span class="evento__fecha">19 OCT</span>
+                            <span class="evento__descripcion">Junta vecinal de seguridad con la Policía Municipal, 18:30 h.</span>
+                        </li>
+                        <li class="evento">
+                            <span class="evento__fecha">26 OCT</span>
+                            <span class="evento__descripcion">Jornada de reforestación y limpieza, punto de reunión: plaza principal, 8:00 h.</span>
+                        </li>
+                    </ol>
+                </div>
+
+                <!-- Widget: atención ciudadana -->
+                <div class="lateral__widget">
+                    <h3 class="lateral__titulo">&#128222; Atención Ciudadana</h3>
+                    <ul class="lateral__lista">
+                        <li><strong>Horario:</strong> Lunes a viernes, 9:00 a 14:00 h.</li>
+                        <li><strong>Ubicación:</strong> Módulo del COPACI, Granjas Guadalupe, Nicolás Romero, Edomex.</li>
+                        <li><strong>Correo:</strong> contacto@copacigg.com</li>
+                    </ul>
+                    <button type="button" class="boton boton--primario boton--ancho"
+                        onclick="location.href='#contacto'">Agendar cita</button>
+                </div>
+            </aside>
+        </div>
+
+        <!-- ==================== PREGUNTAS FRECUENTES (FAQ) ====================
+             <details>/<summary>: acordeón nativo del navegador, accesible con
+             teclado y anunciado por lectores de pantalla sin necesidad de JavaScript. -->
+        <section class="faq" id="faq" aria-labelledby="titulo-faq">
+            <h2 id="titulo-faq" class="seccion-titulo">Preguntas Frecuentes</h2>
+            <p class="seccion-descripcion">Respuestas claras a las dudas más comunes.</p>
+
+            <div class="faq__lista">
+                <details class="faq__item">
+                    <summary class="faq__pregunta">&#191;Los trámites del COPACI tienen costo?</summary>
+                    <p class="faq__respuesta">
+                        <strong>No.</strong> Todos los trámites y servicios del Consejo de
+                        Participación Ciudadana son totalmente gratuitos. Si alguien le
+                        solicita un pago, repórtelo de inmediato en la sección de Reporte
+                        Ciudadano.
+                    </p>
+                </details>
+                <details class="faq__item">
+                    <summary class="faq__pregunta">&#191;Cuánto tarda la Constancia de Residencia?</summary>
+                    <p class="faq__respuesta">
+                        Máximo 3 días hábiles después de registrar su solicitud. Podrá
+                        consultar el avance con el folio que se le entrega al momento
+                        de registrarse.
+                    </p>
+                </details>
+                <details class="faq__item">
+                    <summary class="faq__pregunta">&#191;Puedo reportar sin tener internet en casa?</summary>
+                    <p class="faq__respuesta">
+                        Sí. Puede visitar el módulo del COPACI de lunes a viernes de
+                        9:00 a 14:00 h, llamar a la oficina o pedir ayuda a un vecino
+                        con el folio que se genera aquí en el portal.
+                    </p>
+                </details>
+                <details class="faq__item">
+                    <summary class="faq__pregunta">&#191;Cómo me inscribo a un comité vecinal?</summary>
+                    <p class="faq__respuesta">
+                        Use el formulario de la sección "Buzón de Propuestas y Comités
+                        Vecinales", indique el tema de su interés y el comité
+                        correspondiente lo contactará para su integración.
+                    </p>
+                </details>
+                <details class="faq__item">
+                    <summary class="faq__pregunta">&#191;Qué hago si perdí mi folio de seguimiento?</summary>
+                    <p class="faq__respuesta">
+                        Acuda al módulo del COPACI con una identificación oficial o
+                        escriba al correo oficial indicando su nombre y la fecha del
+                        reporte; se le recuperará su folio.
+                    </p>
+                </details>
+            </div>
+        </section>
+    </main>
+
+    <!-- ================================= PIE DE PÁGINA =================================
+         <footer>: identidad, enlaces de interés y datos de contacto institucional
+         (CSS Grid de 3 columnas). -->
+    <footer class="pie" id="contacto">
+        <div class="pie__contenedor">
+
+            <!-- Columna 1: identidad institucional -->
+            <div class="pie__columna">
+                <h3 class="pie__titulo">COPACI Granjas Guadalupe</h3>
+                <address class="pie__direccion">
+                    Módulo del Consejo de Participación Ciudadana,<br>
+                    Colonia Granjas Guadalupe,<br>
+                    C.P. 54473, Nicolás Romero,<br>
+                    Estado de México.
+                </address>
+                <!-- <address>: etiqueta semántica para información de contacto -->
+            </div>
+
+            <!-- Columna 2: enlaces de interés -->
+            <div class="pie__columna">
+                <h3 class="pie__titulo">Enlaces de Interés</h3>
+                <ul class="pie__lista">
+                    <li><a href="https://www.nicolasromero.gob.mx" target="_blank" rel="noopener" class="pie__enlace">Ayuntamiento de Nicolás Romero</a></li>
+                    <li><a href="https://edomex.gob.mx" target="_blank" rel="noopener" class="pie__enlace">Portal del Estado de México</a></li>
+                    <li><a href="https://www.sapasnir.gob.mx" target="_blank" rel="noopener" class="pie__enlace">SAPASNIR (Agua Potable)</a></li>
+                    <li><a href="#inicio" class="pie__enlace">Volver al inicio</a></li>
+                </ul>
+            </div>
+
+            <!-- Columna 3: contacto y horarios -->
+            <div class="pie__columna">
+                <h3 class="pie__titulo">Contacto</h3>
+                <ul class="pie__lista">
+                    <li><strong>Teléfono:</strong> <a href="tel:+525558233180" class="pie__enlace">55 5823 3180</a></li>
+                    <li><strong>Correo:</strong> contacto@copacigg.com</li>
+                    <li><strong>Horario:</strong> Lun a Vie, 9:00 - 14:00 h</li>
+                    <li><strong>Emergencias:</strong> C4 - 55 5823 3180</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Franja legal del pie -->
+        <div class="pie__legal">
+            <p>&copy; 2026 Consejo de Participación Ciudadana COPACI Granjas Guadalupe, Nicolás Romero, Estado de México. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- ============================ LÓGICA INTERACTIVA (JavaScript) ============================
+         NOTA: la rúbrica exige solo index.html + styles.css, por lo que la lógica de
+         interacción viaja aquí, al final del body, para no crear archivos adicionales.
+         No contiene estilos: toda la presentación sigue en styles.css. -->
+    <script>
+        /* ---------- 1. BARRA DE ACCESIBILIDAD: TAMAÑO DE LETRA ---------- */
+        // Escala de tamaño en porcentaje; se aplica sobre la raíz (html) y todas
+        // las medidas rem del sitio crecen o disminuyen automáticamente.
+        let escalaLetra = 100; // 100% = tamaño base definido en styles.css
+
+        function jsCambiarLetra(cambio) {
+            // Limitar entre 85% (mínimo) y 140% (máximo) para no romper el diseño
+            const nueva = escalaLetra + cambio;
+            if (nueva >= 85 && nueva <= 140) {
+                escalaLetra = nueva;
+                document.documentElement.style.fontSize = escalaLetra + '%';
+            }
+        }
+        // Eventos de los botones A- y A+
+        document.getElementById('btnLetraMenor').addEventListener('click', () => jsCambiarLetra(-10));
+        document.getElementById('btnLetraMayor').addEventListener('click', () => jsCambiarLetra(10));
+
+        /* ---------- 2. MODO DE ALTO CONTRASTE ---------- */
+        // Conmuta la clase 'alto-contraste' en <body>; styles.css redefine las
+        // variables de color cuando esta clase está activa.
+        const btnContraste = document.getElementById('btnContraste');
+        btnContraste.addEventListener('click', () => {
+            const activo = document.body.classList.toggle('alto-contraste');
+            btnContraste.setAttribute('aria-pressed', activo); // estado para lectores de pantalla
+        });
+
+        /* ---------- 3. MENÚ MÓVIL (HAMBURGUESA) ---------- */
+        const btnMenu = document.getElementById('btnMenu');
+        const navPrincipal = document.getElementById('navPrincipal');
+        btnMenu.addEventListener('click', () => {
+            const abierto = navPrincipal.classList.toggle('navegacion--abierta');
+            btnMenu.setAttribute('aria-expanded', abierto);
+        });
+        // Al tocar un enlace del menú en celular, el menú se cierra solo
+        navPrincipal.querySelectorAll('a').forEach(enlace => {
+            enlace.addEventListener('click', () => {
+                navPrincipal.classList.remove('navegacion--abierta');
+                btnMenu.setAttribute('aria-expanded', 'false');
+            });
+        });
+
+        /* ---------- 4. FORMULARIO DE REPORTE: GENERACIÓN DE FOLIO ---------- */
+        // Simula un folio consecutivo: GRP-2026-01, GRP-2026-02, ...
+        let contadorFolios = 0;
+        const foliosRegistrados = []; // "base de datos" en memoria para la consulta
+
+        document.getElementById('formReporte').addEventListener('submit', function (evento) {
+            evento.preventDefault(); // Evita el envío real al servidor (no existe)
+            contadorFolios++;
+            const folio = 'GRP-2026-' + String(contadorFolios).padStart(2, '0');
+            // Guardar el folio con su estado simulado
+            foliosRegistrados.push({ folio: folio, estado: 'Registrado' });
+            // Mostrar el folio en pantalla con instrucciones claras
+            document.getElementById('resultadoFolio').innerHTML =
+                '<strong>&#10004; Reporte recibido.</strong> Su folio de seguimiento es: ' +
+                '<span class="folio">' + folio + '</span><br>' +
+                'Guárdelo: lo necesitará para consultar el avance en la sección "Consulta el Estatus".';
+            this.reset(); // Limpiar el formulario después de enviar
+            // Desplazamiento suave hacia el resultado para que el usuario lo vea
+            document.getElementById('resultadoFolio').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        });
+
+        /* ---------- 5. BUSCADOR DE ESTATUS POR FOLIO ---------- */
+        document.getElementById('formEstatus').addEventListener('submit', function (evento) {
+            evento.preventDefault();
+            const folioBuscado = document.getElementById('folio').value.trim().toUpperCase();
+            const zonaResultado = document.getElementById('resultadoEstatus');
+            if (folioBuscado === '') {
+                zonaResultado.innerHTML = '<span class="estatus__mensaje estatus__mensaje--error">Por favor escriba un folio, por ejemplo GRP-2026-01.</span>';
+                return;
+            }
+            // Buscar en los folios generados en esta sesión
+            const encontrado = foliosRegistrados.find(f => f.folio === folioBuscado);
+            if (encontrado) {
+                zonaResultado.innerHTML =
+                    '<div class="estatus__tarjeta"><span class="folio">' + encontrado.folio + '</span>' +
+                    '<p class="estatus__linea"><strong>Estado:</strong> ' + encontrado.estado + '</p>' +
+                    '<p class="estatus__linea"><strong>Avance:</strong> Su reporte está en valoración por el comité correspondiente. Recibirá respuesta en un máximo de 7 días hábiles.</p></div>';
+            } else {
+                // Si no existe en la sesión, simular una consulta a sistema
+                zonaResultado.innerHTML =
+                    '<div class="estatus__tarjeta"><span class="folio">' + folioBuscado + '</span>' +
+                    '<p class="estatus__linea"><strong>Estado:</strong> En proceso (simulación)</p>' +
+                    '<p class="estatus__linea">Si el folio es correcto, el comité correspondiente ya fue notificado.</p></div>';
+            }
+        });
+
+        /* ---------- 6. BUZÓN DE PROPUESTAS ---------- */
+        document.getElementById('formPropuesta').addEventListener('submit', function (evento) {
+            evento.preventDefault();
+            document.getElementById('resultadoPropuesta').innerHTML =
+                '<strong>&#10004; Propuesta recibida.</strong> Gracias por participar. ' +
+                'El comité correspondiente revisará su idea en la próxima reunión.';
+            this.reset();
+        });
+    </script>
+</body>
+</html>
